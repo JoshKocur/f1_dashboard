@@ -40,12 +40,22 @@ async function connectwss(token, cookie) {
 
 async function main() {
 	try {
-        const streams = ["Heartbeat", "CarData.z", "Position.z",
-        "ExtrapolatedClock", "TopThree", "RcmSeries",
-        "TimingStats", "TimingAppData",
-        "WeatherData", "TrackStatus", "DriverList",
-        "RaceControlMessages", "SessionInfo",
-        "SessionData", "LapCount", "TimingData"];
+        const streams = [
+            "Heartbeat",
+            "ExtrapolatedClock", 
+            "TopThree", 
+            "RcmSeries",
+            "TimingStats", 
+            "TimingAppData",
+            "WeatherData", 
+            "TrackStatus", 
+            "DriverList",
+            "RaceControlMessages", 
+            "SessionInfo",
+            "SessionData", 
+            "LapCount", 
+            "TimingData"
+        ];
 		const resp = await negotiate();
 		console.log(resp.data);
 		console.log(resp.headers);
