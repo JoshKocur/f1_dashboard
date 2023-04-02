@@ -25,14 +25,18 @@ async function connectwss(token, cookie) {
 		    }}
         );
 
-		sock.on('open', ev => {
-			res(sock);
-		});
-		sock.on('message', (data) => {
-			console.log('received %s', data);
+	sock.on('open', ev => {
+	    res(sock);
+	});
+	sock.on('message', (data) => {
+	    console.log('received %s', data);
+	    // TODO: I am thinking here will be a call to a function that parses the data
+	    // for now the parser might handle storing the data as well, but this could be
+	    // split up in the future
+	    // parseData(data);
             const stream = fs.createWriteStream('./data.txt', {'flags': 'a'});
             stream.write(data + '\n');
-		});
+	});
 	});
 	return p
 }
