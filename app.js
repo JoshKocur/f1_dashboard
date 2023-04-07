@@ -48,6 +48,8 @@ async function main() {
 	try {
         const streams = [
             "Heartbeat",
+            "CarData.z", 
+            "Position.z",
             "ExtrapolatedClock", 
             "TopThree", 
             "RcmSeries",
