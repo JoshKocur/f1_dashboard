@@ -88,6 +88,14 @@ const port = 3000
 
 app.use(bodyParser.json());
 
+
+/**
+ * Toy api for just accepting json data via a post request
+ * E.g.
+ * 
+ * curl --header "Content-Type: application/json"   --request POST   --data '{"foo":"xyz","bar":"xyz"}'   http://localhost:3000/parse
+ * 
+ */
 app.post('/parse', (req, resp) => {
     let data = req.body;
     console.log(data);
