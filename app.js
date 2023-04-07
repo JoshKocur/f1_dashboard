@@ -1,5 +1,7 @@
 // npm i axios
 const axios = require('axios');
+const express = require('express');
+const bodyParser = require('body-parser');
 const ws = require('ws');
 const fs = require('fs');
 
@@ -77,4 +79,21 @@ async function main() {
 	}
 }
 
-main();
+// TODO -- 
+// Enable this when you want to run the listener
+// main()
+
+const app = express();
+const port = 3000
+
+app.use(bodyParser.json());
+
+app.post('/parse', (req, resp) => {
+    let data = req.body;
+    console.log(data);
+    resp.send(`Got ... ${data}`);
+});
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
