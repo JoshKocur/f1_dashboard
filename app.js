@@ -1,3 +1,5 @@
+const parser = require('./parser.js');
+
 // npm i axios
 const axios = require('axios');
 const ws = require('ws');
@@ -30,12 +32,15 @@ async function connectwss(token, cookie) {
 	});
 	sock.on('message', (data) => {
 	    console.log('received %s', data);
-	    // TODO: I am thinking here will be a call to a function that parses the data
-	    // for now the parser might handle storing the data as well, but this could be
-	    // split up in the future
-	    // parseData(data);
-            const stream = fs.createWriteStream('./data.txt', {'flags': 'a'});
-            stream.write(data + '\n');
+	    // currently just attempts to parse data and logs if it was successful or not
+        // not actually saving the data here yet...
+	    var parsedData = parser.parseData(data);
+        if(parsedData) {
+            console.log('successfully parsed data:');
+            console.log(parsedData);
+        }
+        const stream = fs.createWriteStream('./data.txt', {'flags': 'a'});
+        stream.write(data + '\n');
 	});
 	});
 	return p

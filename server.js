@@ -1,3 +1,4 @@
+const parser = require('./parser.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -17,6 +18,12 @@ app.use(bodyParser.json());
 app.post('/parse', (req, resp) => {
     let data = req.body;
     console.log(data);
+    var parsedData = parser.parseData(data);
+    if(parsedData) {
+        console.log('successfully parsed data:');
+        console.log(parsedData);
+    }
+    
     resp.send(`Got ... ${data}`);
 });
 
