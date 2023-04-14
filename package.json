@@ -19,6 +19,7 @@
   "homepage": "https://github.com/JoshKocur/f1_dashboard#readme",
   "dependencies": {
     "axios": "^1.3.4",
+    "config": "^3.3.9",
     "express": "^4.18.2",
     "mysql": "^2.18.1",
     "ws": "^8.13.0"
