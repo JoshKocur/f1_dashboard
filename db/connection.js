@@ -5,12 +5,12 @@
  * 
  */
 const mysql = require('mysql');
-
+const config = require('../config/settings');
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'dbuser',
-    password: 's3kreee7',
-    database: 'my_db'
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
   })
 
 exports.default=connection;
