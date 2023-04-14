@@ -5,7 +5,8 @@
  * 
  */
 const mysql = require('mysql');
-const config = require('../config/settings');
+const config = require('config');
+
 const connection = mysql.createConnection({
     host: config.host,
     user: config.user,
