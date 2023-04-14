@@ -47,16 +47,16 @@ function parseData(json) {
 
     var parsedData = new Object();
     switch(category) {
-	case "CarData.z":
-	    let buff = Buffer.from(dataObject, "base64");
-	    let decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+    case "CarData.z":
+	let buff = Buffer.from(dataObject, "base64");
+	let decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
 
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.object = decodedString;
-	    parsedData.time = dataDateString;
+	// maybe a function that sets these as this trio is likely to be repeated lots...
+	parsedData.category = category;
+	parsedData.object = decodedString;
+	parsedData.time = dataDateString;
 
-	    break;
+	break;
     }
     
 
