@@ -1,3 +1,5 @@
+const pako = require('pako');
+
 function parseData(json) {
     // probably need a check to see if json is infact a json object or not
     //const jsonData = JSON.parse(json);
@@ -34,9 +36,10 @@ function parseData(json) {
     if(parsedData instanceof Array) {
         // a try catch might be better error handling here, we need to check that
         // 3 entries in the array actually exist
-        dataType = parsedData[0];
+        category = parsedData[0];
         dataObject = parsedData[1];
         dataDateString = parsedData[2];
+	// turn dataDateString into a date/timestamp object?
     } else {
         console.log("PARSER ERROR: Data not in array format.");
         return;
@@ -44,6 +47,17 @@ function parseData(json) {
 
     // maybe a switch statement for the different data types?
     //if(dataType === "")
+    var parsedData = new Object();
+    switch(category) {
+    case "CarData.z":
+	let buff = Buffer.from(dataObject, "base64");
+	let decodedString = pako.ungzip(buff);
+	// transform decodedString into an object
+	parsedData.category = category;
+	parsedData.object = decodedString;
+	parsedData.time = dataDateString;
+	break;
+    }
     
 
     return parsedData;
