@@ -1,0 +1,8 @@
+{
+    "db":{
+        "host": "localhost",
+        "user": "f1",
+        "password": "temp",
+        "database": "f1_db"
+    }
+}
