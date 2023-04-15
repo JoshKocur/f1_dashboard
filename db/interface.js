@@ -28,3 +28,29 @@ class Table {
         error();
     }
 }
+
+
+class WeatherData extends Table{
+    name(){
+        return "WeatherData"
+    }
+    required_keys(){
+        return [
+            "session_id",
+            "AirTemp",
+            "Humidity",
+            "Pressure",
+            "RainFall",
+            "TrackTemp",
+            "WindSpeed",
+            "WindDirection"
+        ]
+    }
+}
+
+// export every record in "namespace" for ease of use
+name_space = {
+    "WeatherData": WeatherData
+};
+
+export default name_space;
