@@ -14,7 +14,7 @@ class Table {
         }
         this.required_keys().forEach(item =>{
             if(!obj.hasOwnProperty(item)){
-                throw new Error(`Missing key(s): ${item}. Required to have all of ${this.required_keys()} for table ${this.name()}`);
+                throw new TypeError(`Missing key(s): ${item}. Required to have all of ${this.required_keys()} for table ${this.name()}`);
             }
         })
         this.record = obj
@@ -53,4 +53,4 @@ name_space = {
     "WeatherData": WeatherData
 };
 
-export default name_space;
+module.exports=name_space;
