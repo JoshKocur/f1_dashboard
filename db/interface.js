@@ -2,7 +2,6 @@
  * Future home of classes to be used to interface with mysql
  * 
  */
-
 const error = () =>{
     throw new Error("Table class is abstract!");
 }
@@ -35,7 +34,7 @@ class WeatherData extends Table{
         return "WeatherData"
     }
     required_keys(){
-        return [
+        return new Set([
             "session_id",
             "AirTemp",
             "Humidity",
@@ -44,7 +43,7 @@ class WeatherData extends Table{
             "TrackTemp",
             "WindSpeed",
             "WindDirection"
-        ]
+        ])
     }
 }
 
