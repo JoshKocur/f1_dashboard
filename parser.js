@@ -46,10 +46,12 @@ function parseData(json) {
     }
 
     var parsedData = new Object();
+    var buff;
+    var decodedString;
     switch(category) {
     case "CarData.z":
-	let buff = Buffer.from(dataObject, "base64");
-	let decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+	buff = Buffer.from(dataObject, "base64");
+	decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
 
 	// maybe a function that sets these as this trio is likely to be repeated lots...
 	parsedData.category = category;
@@ -57,6 +59,19 @@ function parseData(json) {
 	parsedData.time = dataDateString;
 
 	break;
+    case "Position.z":
+	buff = Buffer.from(dataObject, "base64");
+	decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+
+	// maybe a function that sets these as this trio is likely to be repeated lots...
+	parsedData.category = category;
+	parsedData.object = decodedString;
+	parsedData.time = dataDateString;
+
+	break;
+    default:
+	console.log("PARSER ERROR: Did not recognize message category: " + (category));
+	return;
     }
     
 
