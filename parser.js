@@ -5,77 +5,181 @@ function parseData(json) {
     //const jsonData = JSON.parse(json);
     const jsonData = json;
     var parsedData;
+    var dataToParse = [];
     if(jsonData.hasOwnProperty("M")) {
-        var message = jsonData["M"];
-        if(message instanceof Array) {
-            message = message[0];
-        } else {
-            console.log("PARSER ERROR: Message is not an array.");
-            return;
-        }
-        if(message.hasOwnProperty("H")){
-            const hub = message["H"];
-            if(hub.toLowerCase() === "streaming") {
-                parsedData = message["A"]; // maybe error checking on this access too?
+        var messages = jsonData["M"];
+        if(messages instanceof Array) {
+	    var numMessages = messages.length;
+	    for (var i = 0; i < numMessages; i++) {
+		const message = messages[i];
+		if(message.hasOwnProperty("H")){
+		    const hub = message["H"]; // maybe error checking on this access too?
+		    if(hub.toLowerCase() === "streaming") {
+			dataToParse.push(message["A"]); // maybe error checking on this access too?
+			// if this fails maybe it just isnt added to array, but the array could
+			// contain other valid messages that we want to parse and return
+			// and not just fail (haven't seen this yet, will change code when we encounter
+			// this case)
+		    }
+		} else {
+		    console.log("PARSER ERROR: message did not have 'H' key");
+		    return;
+		}
             }
-        } else {
-            // some sort of error handling/logging needs to go here (and maybe an error count)
-            console.log("PARSER ERROR: Message did not have 'H' key");
+	} else {
+            console.log("PARSER ERROR: did not receive array of messages.");
             return;
-        }
+        }   
     } else {
         // some sort of error handling/logging needs to go here (and maybe an error count)
         console.log("PARSER ERROR: raw message did not have 'M' key");
         return;
     }
 
-    // maybe put the parsing here after all the nested if-else's
-    var dataType;
+    var allParsedData = [];
+    var currentData;
+    var numDataToParse = dataToParse.length;
+    var category;
     var dataObject;
-    var dataTimeString;
-    if(parsedData instanceof Array) {
-        // a try catch might be better error handling here, we need to check that
-        // 3 entries in the array actually exist
-        category = parsedData[0];
-        dataObject = parsedData[1];
-        dataDateString = parsedData[2];
-	// turn dataDateString into a date/timestamp object?
-    } else {
-        console.log("PARSER ERROR: Data not in array format.");
-        return;
-    }
-
-    var parsedData = new Object();
+    var dataDateString;
     var buff;
     var decodedString;
-    switch(category) {
-    case "CarData.z":
-	buff = Buffer.from(dataObject, "base64");
-	decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+    for (var i = 0; i < numDataToParse; i++) {
+	currentData = dataToParse[i];
+	if(currentData instanceof Array) {
+	    // a try catch might be better error handling here, we need to check that
+	    // 3 entries in the array actually exist
+	    category = currentData[0];
+	    dataObject = currentData[1];
+	    dataDateString = currentData[2];
+	    // turn dataDateString into a date/timestamp object?
+	} else {
+	    console.log("PARSER ERROR: Data not in array format.");
+	    return;
+	}
 
-	// maybe a function that sets these as this trio is likely to be repeated lots...
-	parsedData.category = category;
-	parsedData.object = decodedString;
-	parsedData.time = dataDateString;
+	var parsedData = new Object();
+	switch(category) {
+	case "CarData.z":
+	    buff = Buffer.from(dataObject, "base64");
+	    decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
 
-	break;
-    case "Position.z":
-	buff = Buffer.from(dataObject, "base64");
-	decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = decodedString;
+	    parsedData.time = dataDateString;
 
-	// maybe a function that sets these as this trio is likely to be repeated lots...
-	parsedData.category = category;
-	parsedData.object = decodedString;
-	parsedData.time = dataDateString;
+	    break;
+	case "Position.z":
+	    buff = Buffer.from(dataObject, "base64");
+	    decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
 
-	break;
-    default:
-	console.log("PARSER ERROR: Did not recognize message category: " + (category));
-	return;
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = decodedString;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "TimingData":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "TimingStats":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "DriverList":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "TimingAppData":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "Heartbeat":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "TopThree":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "WeatherData":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "TrackStatus":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "SessionData":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "RaceControlMessages":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "SessionInfo":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "ExtrapolatedClock":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+	case "LapCount":
+	    // maybe a function that sets these as this trio is likely to be repeated lots...
+	    parsedData.category = category;
+	    parsedData.object = dataObject;
+	    parsedData.time = dataDateString;
+
+	    break;
+
+	default:
+	    console.log("PARSER ERROR: Did not recognize message category: " + (category));
+	    return;
+	}
+	allParsedData.push(parsedData)
     }
-    
 
-    return parsedData;
+    return allParsedData;
 }
 
 module.exports = { parseData }
