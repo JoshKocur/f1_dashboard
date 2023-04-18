@@ -20,10 +20,14 @@ sudo apt-get install mysql-server
 /etc/init.d/mysql start
 ```
 within the mysql repl..
-```mysql
+```bash
 CREATE USER 'f1'@'localhost' IDENTIFIED BY 'temp';
 CREATE DATABASE f1_db;
 GRANT ALL PRIVILEGES ON f1_db TO 'f1'; 
+
+# Ensure you add the following to make a local connection possible
+ALTER USER 'f1'@'localhost' IDENTIFIED WITH MYSQL_NATIVE_PASSWORD BY 'temp';
+# Change the username, host, and password (temp) as needed.
 ```
 
 ### Node 
