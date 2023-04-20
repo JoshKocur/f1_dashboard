@@ -7,7 +7,7 @@
 const mysql = require('mysql');
 const config = require('config');
 
-db_config = config.get('db');
+const db_config = config.get('db');
 
 
 const connection = mysql.createConnection({
