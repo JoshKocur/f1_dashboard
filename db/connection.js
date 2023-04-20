@@ -7,11 +7,15 @@
 const mysql = require('mysql');
 const config = require('config');
 
+db_config = config.get('db');
+
+
 const connection = mysql.createConnection({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    database: config.database
+    host: db_config.host,
+    user: db_config.user,
+    password: db_config.password,
+    database: db_config.database
   })
 
-exports.default=connection;
+
+module.exports=connection;
