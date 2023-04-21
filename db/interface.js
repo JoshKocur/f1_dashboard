@@ -28,6 +28,22 @@ class Table {
     }
 }
 
+class RaceControlMessage extends Table{
+    name(){
+        return "RaceControlMessage";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "Category", 
+            "Flag",
+            "Scope",
+            "Sector",
+            "Message"
+            // TimeStamp
+        ])
+    }
+}
 
 class WeatherData extends Table{
     name(){
@@ -43,13 +59,16 @@ class WeatherData extends Table{
             "TrackTemp",
             "WindSpeed",
             "WindDirection"
+            // TimeStamp
         ])
     }
 }
 
+
 // export every record in "namespace" for ease of use
 name_space = {
-    "WeatherData": WeatherData
+    "WeatherData": WeatherData,
+    "RaceControlMessage": RaceControlMessage
 };
 
 module.exports=name_space;
