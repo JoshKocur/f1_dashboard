@@ -51,7 +51,7 @@ class WeatherData extends Table{
     }
     required_keys(){
         return new Set([
-            "session_id",
+            "SessionId",
             "AirTemp",
             "Humidity",
             "Pressure",
