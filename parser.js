@@ -83,8 +83,24 @@ function parseData(json) {
 	case "TimingData":
 	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
 	    parsedData.time = dataDateString;
+
+	    var cleanedObject = new Object();
+	    const driverNumber = Object.keys(dataObject["Lines"])[0];
+	    cleanedObject.driverNumber = driverNumber;
+	    var nestedObject = dataObject["Lines"][driverNumber];
+	    // two cases: gap to leader or sector status
+	    if (nestedObject.hasOwnProperty("GapToLeader")) {
+		cleanedObject.gapToLeader = nestedObject["GapToLeader"];
+		cleanedObject.intervalToPositionAhead = nestedObject["IntervalToPositionAhead"]["Value"];
+	    } else {
+		const sectorsKey = Object.keys(nestedObject["Sectors"])[0];
+		cleanedObject.sectors = sectorsKey;
+		const segmentsKey = Object.keys(nestedObject["Sectors"][sectorsKey]["Segments"])[0];
+		cleanedObject.segments = segmentsKey;
+		cleanedObject.status = nestedObject["Sectors"][sectorsKey]["Segments"][segmentsKey]["Status"];
+	    }
+	    parsedData.object = cleanedObject;
 
 	    break;
 	case "TimingStats":
