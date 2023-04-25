@@ -109,29 +109,30 @@ function parseData(json) {
 	    parsedData.object = [];
 	    parsedData.time = dataDateString;
 
-	    // two cases: best speeds and best lap time
+	    // two cases: best speeds and best lap time, but sometimes come together
 	    const driverNumbers = Object.keys(dataObject["Lines"]);
 	    for (let i = 0; i < driverNumbers.length; i++) {
 		var cleanedObject = new Object();
 		cleanedObject.driverNumber = driverNumbers[i];
 		var nestedObject = dataObject["Lines"][driverNumbers[i]];
-		if (nestedObject.hasOwnProperty("BestSpeeds")) {
-		    const bestSpeed = Object.keys(nestedObject["BestSpeeds"])[0];
-		    cleanedObject.bestSpeed = bestSpeed;
-		    const bestSpeedKeys = Object.keys(nestedObject["BestSpeeds"][bestSpeed]);
-		    for (let j = 0; j < bestSpeedKeys.length; j++) {
-			cleanedObject[bestSpeedKeys[j]] = nestedObject["BestSpeeds"][bestSpeed][bestSpeedKeys[j]];
+		const keys = Object.keys(nestedObject);
+		for (let j = 0; j < keys.length; j++) {
+		    if (keys[j] == "BestSpeeds") {
+			const bestSpeed = Object.keys(nestedObject["BestSpeeds"])[0];
+			cleanedObject.bestSpeed = bestSpeed;
+			const bestSpeedKeys = Object.keys(nestedObject["BestSpeeds"][bestSpeed]);
+			for (let k = 0; k < bestSpeedKeys.length; k++) {
+			    cleanedObject[bestSpeedKeys[k]] = nestedObject["BestSpeeds"][bestSpeed][bestSpeedKeys[k]];
+			}
+		    } else {
+			const lapKeys = Object.keys(nestedObject["PersonalBestLapTime"]);
+			for (let k = 0; k < lapKeys.length; k++) {
+			    cleanedObject[lapKeys[k]] = nestedObject["PersonalBestLapTime"][lapKeys[k]];
+			}
 		    }
-		} else {
-		    const sectorsKey = Object.keys(nestedObject["Sectors"])[0];
-		    cleanedObject.sectors = sectorsKey;
-		    const segmentsKey = Object.keys(nestedObject["Sectors"][sectorsKey]["Segments"])[0];
-		    cleanedObject.segments = segmentsKey;
-		    cleanedObject.status = nestedObject["Sectors"][sectorsKey]["Segments"][segmentsKey]["Status"];
 		}
 		parsedData.object.push(cleanedObject);
 	    }
-	    
 
 	    break;
 	case "DriverList":
