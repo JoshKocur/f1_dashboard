@@ -110,7 +110,7 @@ function parseData(json) {
 	    parsedData.time = dataDateString;
 
 	    // two cases: best speeds and best lap time, but sometimes come together
-	    const driverNumbers = Object.keys(dataObject["Lines"]);
+	    var driverNumbers = Object.keys(dataObject["Lines"]);
 	    for (let i = 0; i < driverNumbers.length; i++) {
 		var cleanedObject = new Object();
 		cleanedObject.driverNumber = driverNumbers[i];
@@ -138,8 +138,21 @@ function parseData(json) {
 	case "DriverList":
 	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
+	    parsedData.object = [];
 	    parsedData.time = dataDateString;
+
+	    // I think it is driverNumber: {"Line": x} where "Line" means position and x is
+	    // the position
+
+	    var driverNumbers = Object.keys(dataObject);
+	    var driverPosition;
+	    for (let i = 0; i < driverNumbers.length; i++) {
+		var cleanedObject = new Object();
+		driverPosition = dataObject[driverNumbers[i]]["Line"];
+		cleanedObject.driverNumber = driverNumbers[i];
+		cleanedObject.driverPosition = driverPosition;
+		parsedData.object.push(cleanedObject);
+	    }
 
 	    break;
 	case "TimingAppData":
