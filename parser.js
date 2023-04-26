@@ -158,8 +158,20 @@ function parseData(json) {
 	case "TimingAppData":
 	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
+	    parsedData.object = [];
 	    parsedData.time = dataDateString;
+	    
+	    // I think it is driverNumber: {"Line": x} where "Line" means ??? and x is ???
+
+	    var driverNumbers = Object.keys(dataObject["Lines"]);
+	    var line;
+	    for (let i = 0; i < driverNumbers.length; i++) {
+		var cleanedObject = new Object();
+		line = dataObject["Lines"][driverNumbers[i]]["Line"];
+		cleanedObject.driverNumber = driverNumbers[i];
+		cleanedObject.line = line;
+		parsedData.object.push(cleanedObject);
+	    }
 
 	    break;
 	case "Heartbeat":
