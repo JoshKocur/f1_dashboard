@@ -1,6 +1,4 @@
 const connection = require('./connection');
-const tables = require('./interface');
-
 
 function Query(QString){
     connection.connect((err)=>{
