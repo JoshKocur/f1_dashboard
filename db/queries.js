@@ -1,13 +1,13 @@
-const connection = require('../connection');
+const connection = require('./connection');
 const tables = require('./interface');
 
 
-function query(QString){
+function Query(QString){
     connection.connect((err)=>{
         if(err){
             throw err
         }
-
+        console.log(QString)
         connection.query(QString, (err, res) =>{
             if(err){
                 console.log(err);
@@ -16,12 +16,24 @@ function query(QString){
                 console.log(res);
             }
         })
+        connection.end();
     })
 }
 
 
-class Query{
-    insertion_params(){
+class TableQuery{
+    insertion_params(record){
         throw new Error("Must define `insertion_params` in child class!");
+    }
+    insert(record){
+        let QString = this.insertion_params(record)
+        return Query(QString);
+    }
+}
+
+class WeatherDataQuery extends TableQuery{
+    insertion_params(record){
+        return `INSERT INTO WeatherData (SessionId, AirTemp, Humidity, Pressure, RainFall, TrackTemp, WindSpeed, WindDirection) VALUES 
+            (${record.SessionId}, ${record.AirTemp}, ${record.Humidity}, ${record.Pressure}, ${record.RainFall}, ${record.TrackTemp}, ${record.WindSpeed}, ${record.WindSpeed})`;
     }
 }
