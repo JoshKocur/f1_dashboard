@@ -59,35 +59,28 @@ function parseData(json) {
 	}
 
 	var parsedData = new Object();
+	parsedData.category = category;
+	parsedData.object = [];
+	parsedData.time = dataDateString;
 	switch(category) {
 	case "CarData.z":
 	    buff = Buffer.from(dataObject, "base64");
 	    decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
 
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
 	    parsedData.object = decodedString;
-	    parsedData.time = dataDateString;
-
+	    
 	    break;
 	case "Position.z":
 	    buff = Buffer.from(dataObject, "base64");
 	    decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
 
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
 	    parsedData.object = decodedString;
-	    parsedData.time = dataDateString;
-
+	    
 	    break;
 	case "TimingData":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.time = dataDateString;
-
-	    // two cases: gap to leader or sector status	    
+	    // three??? two cases: gap to leader or sector status	    
 	    var cleanedObject = new Object();
-	    const driverNumber = Object.keys(dataObject["Lines"])[0];
+	    var driverNumber = Object.keys(dataObject["Lines"])[0];
 	    cleanedObject.driverNumber = driverNumber;
 	    var nestedObject = dataObject["Lines"][driverNumber];
 	    if (nestedObject.hasOwnProperty("GapToLeader")) {
@@ -104,11 +97,6 @@ function parseData(json) {
 
 	    break;
 	case "TimingStats":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.object = [];
-	    parsedData.time = dataDateString;
-
 	    // two cases: best speeds and best lap time, but sometimes come together
 	    var driverNumbers = Object.keys(dataObject["Lines"]);
 	    for (let i = 0; i < driverNumbers.length; i++) {
@@ -136,14 +124,8 @@ function parseData(json) {
 
 	    break;
 	case "DriverList":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.object = [];
-	    parsedData.time = dataDateString;
-
 	    // I think it is driverNumber: {"Line": x} where "Line" means position and x is
 	    // the position
-
 	    var driverNumbers = Object.keys(dataObject);
 	    var driverPosition;
 	    for (let i = 0; i < driverNumbers.length; i++) {
@@ -156,13 +138,7 @@ function parseData(json) {
 
 	    break;
 	case "TimingAppData":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.object = [];
-	    parsedData.time = dataDateString;
-	    
 	    // I think it is driverNumber: {"Line": x} where "Line" means ??? and x is ???
-
 	    var driverNumbers = Object.keys(dataObject["Lines"]);
 	    var line;
 	    for (let i = 0; i < driverNumbers.length; i++) {
@@ -175,17 +151,24 @@ function parseData(json) {
 
 	    break;
 	case "Heartbeat":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.object = dataObject;
-	    parsedData.time = dataDateString;
+	    parsedData.object.push(dataObject);
 
 	    break;
 	case "TopThree":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
-	    parsedData.category = category;
-	    parsedData.object = dataObject;
-	    parsedData.time = dataDateString;
+	    // 2 cases, lap state and difftoahead
+	    var cleanedObject = new Object();
+	    var driverNumber = Object.keys(dataObject["Lines"])[0];
+	    var keys = Object.keys(dataObject["Lines"][driverNumber]);
+	    cleanedObject.driverNumber = driverNumber;
+	    if (keys[0] == "LapState") {
+		cleanedObject.lapState = dataObject["Lines"][driverNumber]["LapState"];
+	    } else {
+		var diffToAhead = dataObject["Lines"][driverNumber]["DiffToAhead"];
+		var diffToLeader = dataObject["Lines"][driverNumber]["DiffToLeader"];
+		cleanedObject.diffToAhead = diffToAhead;
+		cleanedObject.diffToLeader = diffToLeader;
+	    }
+	    parsedData.object.push(cleanedObject);
 
 	    break;
 	case "WeatherData":
