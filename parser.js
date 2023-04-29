@@ -78,20 +78,47 @@ function parseData(json) {
 	    
 	    break;
 	case "TimingData":
-	    // three??? two cases: gap to leader or sector status	    
+	    // seems to have several possible different keys with a non-obvious (to me)
+	    // pattern for when some are included or left out so we iterate over the keys
+	    // we get and handle each key type accordingly
 	    var cleanedObject = new Object();
 	    var driverNumber = Object.keys(dataObject["Lines"])[0];
 	    cleanedObject.driverNumber = driverNumber;
 	    var nestedObject = dataObject["Lines"][driverNumber];
-	    if (nestedObject.hasOwnProperty("GapToLeader")) {
-		cleanedObject.gapToLeader = nestedObject["GapToLeader"];
-		cleanedObject.intervalToPositionAhead = nestedObject["IntervalToPositionAhead"]["Value"];
-	    } else {
-		const sectorsKey = Object.keys(nestedObject["Sectors"])[0];
-		cleanedObject.sectors = sectorsKey;
-		const segmentsKey = Object.keys(nestedObject["Sectors"][sectorsKey]["Segments"])[0];
-		cleanedObject.segments = segmentsKey;
-		cleanedObject.status = nestedObject["Sectors"][sectorsKey]["Segments"][segmentsKey]["Status"];
+	    var nestedKeys = Object.keys(nestedObject);
+	    for (let i = 0; i < nestedKeys.length; i++) {
+		switch(nestedKeys[i]) {
+		case "IntervalToPositionAhead":
+		    cleanedObject.intervalToPositionAhead = nestedObject["IntervalToPositionAhead"]["Value"];
+		    break;
+		case "Sectors":
+		    const sectorsKey = Object.keys(nestedObject["Sectors"])[0];
+		    cleanedObject.sectors = sectorsKey;
+		    // segments seems to be an extra nesting to handle specifically,
+		    // so far the rest are 1d nest so we handle them as a general else case
+		    if (nestedObject["Sectors"][sectorsKey].hasOwnProperty("Segments")) {
+			const segmentsKey = Object.keys(nestedObject["Sectors"][sectorsKey]["Segments"])[0];
+			cleanedObject.segments = segmentsKey;
+			cleanedObject.status = nestedObject["Sectors"][sectorsKey]["Segments"][segmentsKey]["Status"];
+		    } else {
+			var key = Object.keys(nestedObject["Sectors"][sectorsKey])[0];
+			var keyName = "sectors_" + key;
+			cleanedObject[keyName] = nestedObject["Sectors"][sectorsKey][key];
+		    }
+		    break;
+		case "Speeds":
+		    var key = Object.keys(nestedObject["Speeds"])[0];
+		    cleanedObject.speeds = key;
+		    var nKeys = Object.keys(nestedObject["Speeds"][key]);
+		    for (let j = 0; j < nKeys.length; j++) {
+			var keyName = "speeds_" + nKeys[j];
+			cleanedObject[keyName] = nestedObject["Speeds"][key][nKeys[j]];
+		    }
+		    break;
+		default:
+		    cleanedObject[nestedKeys[i]] = nestedObject[nestedKeys[i]];
+		    break;
+		}
 	    }
 	    parsedData.object = [cleanedObject];
 
