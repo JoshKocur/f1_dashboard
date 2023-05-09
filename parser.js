@@ -66,15 +66,60 @@ function parseData(json) {
 	case "CarData.z":
 	    buff = Buffer.from(dataObject, "base64");
 	    decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+	    dataObject = JSON.parse(decodedString);
 
-	    parsedData.object = decodedString;
+	    var Entries = dataObject.Entries;
+	    var currObject;
+	    var currUtcTime;
+	    var currCars;
+	    var currDriverObject;
+	    for (let i = 0; i < Entries.length; i++) {
+		currObject = Entries[i];
+		currUtcTime = currObject.Utc;
+		currCars = Object.keys(currObject.Cars);
+		for (let j = 0; j < currCars.length; j++) {
+		    var cleanedObject = new Object();
+		    currDriverObject = currObject.Cars[currCars[j]]["Channels"];
+		    cleanedObject.DriverNumber = currCars[j];
+		    cleanedObject.RPM = currDriverObject["0"];
+		    cleanedObject.Speed = currDriverObject["2"];
+		    cleanedObject.Gear = currDriverObject["3"];
+		    cleanedObject.Throttle = currDriverObject["4"];
+		    cleanedObject.DRS = currDriverObject["5"];
+		    cleanedObject.Breaks = currDriverObject["45"];
+		    cleanedObject.UTC = currUtcTime;
+		    parsedData.object.push(cleanedObject);
+		}
+	    }
 	    
 	    break;
 	case "Position.z":
+	    parsedData.category = "DriverData";
 	    buff = Buffer.from(dataObject, "base64");
 	    decodedString = pako.ungzip(buff, { raw: true, to: 'string' });
+	    dataObject = JSON.parse(decodedString);
 
-	    parsedData.object = decodedString;
+	    var Position = dataObject.Position;
+	    var currObject;
+	    var currUtcTime;
+	    var currEntries;
+	    var currDriverObject;
+	    for (let i = 0; i < Position.length; i++) {
+		currObject = Position[i];
+		currUtcTime = currObject.Timestamp;
+		currEntries = Object.keys(currObject.Entries);
+		for (let j = 0; j < currEntries.length; j++) {
+		    var cleanedObject = new Object();
+		    currDriverObject = currObject.Entries[currEntries[j]];
+		    cleanedObject.DriverNumber = currEntries[j];
+		    cleanedObject.StatusType = currDriverObject["Status"];
+		    cleanedObject.X = currDriverObject["X"];
+		    cleanedObject.Y = currDriverObject["Y"];
+		    cleanedObject.Z = currDriverObject["Z"];
+		    cleanedObject.UTC = currUtcTime;
+		    parsedData.object.push(cleanedObject);
+		}
+	    }
 	    
 	    break;
 	case "TimingData":
@@ -120,7 +165,7 @@ function parseData(json) {
 		    break;
 		}
 	    }
-	    parsedData.object = [cleanedObject];
+	    parsedData.object.push(cleanedObject);
 
 	    break;
 	case "TimingStats":
@@ -199,51 +244,81 @@ function parseData(json) {
 
 	    break;
 	case "WeatherData":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
+	    parsedData.object.push(dataObject);
 	    parsedData.time = dataDateString;
 
 	    break;
 	case "TrackStatus":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
 	    parsedData.time = dataDateString;
+
+	    parsedData.object.push(dataObject);
 
 	    break;
 	case "SessionData":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
 	    parsedData.time = dataDateString;
+
+	    // only aware of a "StatusSeries" key so just hard coding this here until we encounter it failing
+	    // then we can think of how to better generalize
+	    var cleanedObject = new Object();
+	    var statusSeriesKey = Object.keys(dataObject["StatusSeries"])[0];
+	    cleanedObject.statusSeries = statusSeriesKey;
+	    cleanedObject.utc = dataObject["StatusSeries"][statusSeriesKey]["Utc"];
+	    cleanedObject.trackStatus = dataObject["StatusSeries"][statusSeriesKey]["TrackStatus"];
+
+	    parsedData.object.push(cleanedObject);
 
 	    break;
 	case "RaceControlMessages":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
 	    parsedData.time = dataDateString;
+
+	    // only aware of a "Messages" key so just hard coding this here until we encounter it failing
+	    // then we can think of how to better generalize
+	    var cleanedObject = new Object();
+	    var messagesKey = Object.keys(dataObject["Messages"])[0];
+	    var messagesKeys = Object.keys(dataObject["Messages"][messagesKey]);
+	    cleanedObject.messages = messagesKey;
+	    for (let i = 0; i < messagesKeys.length; i++) {
+		cleanedObject[messagesKeys[i]] = dataObject["Messages"][messagesKey][messagesKeys[i]];
+	    }
+
+	    parsedData.object.push(cleanedObject);
 
 	    break;
 	case "SessionInfo":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
 	    parsedData.time = dataDateString;
+	    
+	    var cleanedObject = new Object();
+	    var Meeting = dataObject.Meeting;
+	    
+	    cleanedObject.MeetingKey = Meeting.Key;
+	    cleanedObject.MeetingName = Meeting.Name;
+	    cleanedObject.MeetingLocation = Meeting.Location;
+	    cleanedObject.MeetingCountry = Meeting.Country.Name;
+	    cleanedObject.MeetingCircuit = Meeting.Circuit.ShortName;
+	    cleanedObject.SessionKey = dataObject.Key;
+	    cleanedObject.SessionType = dataObject.Type;
+	    cleanedObject.SessionName = dataObject.Name;
+	    cleanedObject.SessionStartDateUTC = dataObject.StartDate;
+	    cleanedObject.SessionEndDateUTC = dataObject.EndDate;
+	    cleanedObject.SessionGmtOffset = dataObject.GmtOffset;
+
+	    parsedData.object.push(cleanedObject);
 
 	    break;
 	case "ExtrapolatedClock":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
+	    parsedData.object.push(dataObject);
 	    parsedData.time = dataDateString;
 
 	    break;
 	case "LapCount":
-	    // maybe a function that sets these as this trio is likely to be repeated lots...
 	    parsedData.category = category;
-	    parsedData.object = dataObject;
+	    parsedData.object.push(dataObject);
 	    parsedData.time = dataDateString;
 
 	    break;
