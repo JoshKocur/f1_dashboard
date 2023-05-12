@@ -118,6 +118,35 @@ class TrackStatus{
 }
 
 
+class TimingAppData extends Table(){
+    name(){
+        return "TimingAppData";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "LineNumber"
+        ]);
+    }
+}
+
+
+class DriverList extends Table(){
+    name(){
+        return "DriverList";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "LineNumber",
+        ]);
+    }
+}
+
+
+
 class SessionData{
     name(){
         return "SessionData";
