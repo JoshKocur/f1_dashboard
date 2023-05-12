@@ -145,6 +145,21 @@ class DriverList extends Table(){
     }
 }
 
+class DriverData extends Table(){
+    name(){
+        return "DriverData";
+    }
+    required_keys(){
+        return new Set([
+            "DriverNumber",
+            "StatusType",
+            "X",
+            'Y',
+            "Z",
+            "UTC"
+        ]);
+    }
+}
 
 
 class SessionData{
