@@ -55,9 +55,10 @@ class RaceControlMessage extends Table{
     required_keys(){
         return new Set([
             "SessionId",
+            "MessageType",
             "Category", 
+            "UTC",
             "Flag",
-            "Scope",
             "Sector",
             "Message"
             // TimeStamp
@@ -84,7 +85,8 @@ class WeatherData extends Table{
     }
     optional_keys(){
         return new Set([
-            "UTC"]);
+            "UTC"
+        ]);
     }
 }
 
