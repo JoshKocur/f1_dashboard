@@ -90,6 +90,19 @@ class WeatherData extends Table{
     }
 }
 
+class LapCount extends Table{
+    name(){
+        return "LapCount";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "CurrentLap",
+        ]);
+    }
+}
+
+
 class TrackStatus{
     name(){
         return "TrackStatus";
