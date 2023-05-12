@@ -43,7 +43,7 @@ class Table {
      * present in the object passed into the constructor.
     */
     optional_keys(){
-        error();
+        return Set([])
     }
 
 }
