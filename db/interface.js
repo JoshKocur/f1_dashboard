@@ -151,6 +151,7 @@ class DriverData extends Table(){
     }
     required_keys(){
         return new Set([
+            "SessionId",
             "DriverNumber",
             "StatusType",
             "X",
