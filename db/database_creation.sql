@@ -43,7 +43,7 @@ CREATE TABLE TrackStatus(
 CREATE TABLE RaceControlMessages(
        SessionId INT NOT NULL,
        RaceControlMessagesId INT NOT NULL AUTO_INCREMENT,
-       TYPE VARCHAR(2),
+       MessageType VARCHAR(2),
        UTC VARCHAR(20),
        Category VARCHAR(20),
        Flag VARCHAR(25),
@@ -110,14 +110,28 @@ CREATE TABLE TimingData(
        PRIMARY KEY (TimingDataId)
 );
 
-CREATE TABLE TimingStatus(
+CREATE TABLE TimingStatsST(
        SessionId INT NOT NULL,
-       TimingStatusId INT NOT NULL,
+       TimingStatsSTId INT NOT NULL,
        DriverNumber VARCHAR(3) NOT NULL,
        Position INT,
-       Value VARCHAR(3),
+       StatValue VARCHAR(3),
        FOREIGN KEY (SessionId) REFERENCES Session(SessionId),
-       PRIMARY KEY (TimingStatusId)
+       PRIMARY KEY (TimingStatsSTId)
+);
+
+CREATE TABLE TimingStats(
+       SessionId INT NOT NULL,
+       TimingStatsId INT NOT NULL,
+       DriverNumber VARCHAR(3) NOT NULL,
+       PersonalBestLapNumber INT,
+       PersonalBestPosition INT,
+       PersonalBestLapValue VARCHAR(10),
+       BestSpeedsFLPosition INT,
+       BestSpeedsFLValue VARCHAR(5)
+
+       FOREIGN KEY (SessionId) REFERENCES Session(SessionId)
+       PRIMARY KEY(TimingStatsId)
 );
 
 CREATE TABLE TimingAppData (
