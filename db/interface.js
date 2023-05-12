@@ -163,6 +163,23 @@ class DriverData extends Table(){
 }
 
 
+class TimingStatus extends Table(){
+    name(){
+        return "TimingStatus";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "Position",
+            "Value"
+        ]);
+    }
+}
+
+
+
+
 class SessionData{
     name(){
         return "SessionData";
