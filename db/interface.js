@@ -177,18 +177,52 @@ class TimingStatus extends Table(){
     }
 }
 
+class CarData extends Table(){
+    name(){
+        return "CarData";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "RPM",
+            "Speed",
+            "Great",
+            "Throttle",
+            "DRS",
+            "Breaks",
+            "UTC"
+        ]);
+    }
+}
 
-
+class DriverData extends Table(){
+    name(){
+        return "DriverData";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "StatusType",
+            "X",
+            "Y",
+            "Z",
+            "UTC"
+        ])
+    }
+}
 
 class SessionData{
     name(){
         return "SessionData";
     }
     required_keys(){
+        return new Set([
         "SessionId",
         "TrackStatus",
         "StatusSeries"
-        // TimeStamp??? 
+        ]);
     }
 }
 
