@@ -55,3 +55,23 @@ class WeatherDataQuery extends TableQuery{
             (${record.SessionId}, ${record.AirTemp}, ${record.Humidity}, ${record.Pressure}, ${record.RainFall}, ${record.TrackTemp}, ${record.WindSpeed}, ${record.WindSpeed})`;
     }
 }
+
+class TrackStatusQuery extends TableQuery{
+    insertion_params(record){
+        return `INSERT INTO TrackStatus (SessionId, TrackStatus, MSG) VALUES (${record.SessionId}, ${record.TrackStatus}, ${record.MSG})`;  
+    }
+}
+
+class RaceControlMessagesQuery extends TableQuery{
+    insertion_params(record){
+        return `INSERT INTO RaceControlMessages (SessionId, MessageType, UTC, Category, Flag, Scope, Sector, MSG) VALUES
+          (${record.SessionId}, 
+            ${record.MessageType}, 
+            ${record.UTC}, 
+            ${record.Category}, 
+            ${record.Flag}, 
+            ${record.Scope}, 
+            ${record.Sector}, 
+            ${record.MSG})`;
+    }
+}
