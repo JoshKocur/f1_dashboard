@@ -291,8 +291,21 @@ class SessionData extends Table{
 
 // export every Table in "namespace" for ease of use
 name_space = {
-    "WeatherData": WeatherData,
+    "Session": Session,
     "RaceControlMessage": RaceControlMessage,
+    "WeatherData": WeatherData,
+    "LapCount": LapCount,
+    "TrackStatus": TrackStatus,
+    "TimingAppData": TimingAppData,
+    "TimingData": TimingData,
+    "DriverList": DriverList,
+    "DriverData": DriverData,
+    "TimingStatsST": TimingStatsST,
+    "TimingStats": TimingStats,
+    "RaceControlMessage": RaceControlMessage,
+    "CarData": CarData,
+    "DriverData": DriverData,
+    "DriverList": DriverList,
     "TrackStatus": TrackStatus,
     "SessionData": SessionData,
 };
