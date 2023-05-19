@@ -48,6 +48,28 @@ class Table {
 
 }
 
+
+class Session extends Table{
+    name(){
+        return "Session";
+    }
+    required_keys(){
+        "MeetingKey",
+        "MeetingName",
+        "MeetingLocation",
+        "MeetingCircuit",
+        "ArchiveStatus",
+        "SessionKey",
+        "SessionType",
+        "SessionName",
+        "SessionStartDateUTC",
+        "SessionEndDateUTC",
+        "SessionStartDateTimeStamp",
+        "SessionGmtOffset"
+    }
+}
+
+
 class RaceControlMessage extends Table{
     name(){
         return "RaceControlMessage";
