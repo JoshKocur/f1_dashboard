@@ -103,7 +103,7 @@ class LapCount extends Table{
 }
 
 
-class TrackStatus{
+class TrackStatus extends Table{
     name(){
         return "TrackStatus";
     }
@@ -118,7 +118,7 @@ class TrackStatus{
 }
 
 
-class TimingAppData extends Table(){
+class TimingAppData extends Table{
     name(){
         return "TimingAppData";
     }
@@ -132,7 +132,7 @@ class TimingAppData extends Table(){
 }
 
 
-class DriverList extends Table(){
+class DriverList extends Table{
     name(){
         return "DriverList";
     }
@@ -145,7 +145,7 @@ class DriverList extends Table(){
     }
 }
 
-class DriverData extends Table(){
+class DriverData extends Table{
     name(){
         return "DriverData";
     }
@@ -163,7 +163,7 @@ class DriverData extends Table(){
 }
 
 
-class TimingStatus extends Table(){
+class TimingStatus extends Table{
     name(){
         return "TimingStatus";
     }
@@ -177,7 +177,7 @@ class TimingStatus extends Table(){
     }
 }
 
-class CarData extends Table(){
+class CarData extends Table{
     name(){
         return "CarData";
     }
@@ -196,7 +196,7 @@ class CarData extends Table(){
     }
 }
 
-class DriverData extends Table(){
+class DriverData extends Table{
     name(){
         return "DriverData";
     }
@@ -213,7 +213,20 @@ class DriverData extends Table(){
     }
 }
 
-class SessionData{
+class DriverList extends Table{
+    name(){
+        return "DriverList";
+    }
+    required_keys(){
+        return new Set([
+           "SessionId",
+           "DriverNumber",
+           "LineNumber", 
+        ]);
+    }
+}
+
+class SessionData extends Table{
     name(){
         return "SessionData";
     }
