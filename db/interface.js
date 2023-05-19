@@ -131,6 +131,20 @@ class TimingAppData extends Table{
     }
 }
 
+class TimingData extends Table{
+    name(){
+        return "TimingData";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "Sector",
+            "Segment",
+            "TimingStatus",
+        ])
+    }
+}
 
 class DriverList extends Table{
     name(){
