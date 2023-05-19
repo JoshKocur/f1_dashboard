@@ -29,6 +29,26 @@ class TableQuery{
     }
 }
 
+
+class SessionQuery extends TableQuery{
+    insertion_params(record){
+        return `INSERT INTO Session (MeetingKey, MeetingName, MeetingLocation, MeetingCircuit, ArchiveStatus, SessionKey, SessionType, SessionName, SessionStartDateUTC, SessionEndDateUTC, SessionStartDateTimeStamp,SessionGmtOffset VALUES
+            (
+                ${record.MeetingKey}, 
+                ${record.MeetingName}, 
+                ${record.MeetingLocation}, 
+                ${record.MeetingCircuit}, 
+                ${record.ArchiveStatus}, 
+                ${record.SessionKey}, 
+                ${record.SessionType}, 
+                ${record.SessionName}
+                ${record.SessionStartDateUTC},
+                ${record.SessionEndDateUTC},
+                ${record.SessionGmtOffset})`;
+    }
+}
+
+
 class WeatherDataQuery extends TableQuery{
     insertion_params(record){
         return `INSERT INTO WeatherData (SessionId, AirTemp, Humidity, Pressure, RainFall, TrackTemp, WindSpeed, WindDirection) VALUES 
