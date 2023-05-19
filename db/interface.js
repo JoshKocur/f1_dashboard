@@ -82,8 +82,7 @@ class RaceControlMessage extends Table{
             "UTC",
             "Flag",
             "Sector",
-            "Message"
-            // TimeStamp
+            "MSG"
         ])
     }
 }
@@ -102,7 +101,6 @@ class WeatherData extends Table{
             "TrackTemp",
             "WindSpeed",
             "WindDirection"
-            // TimeStamp
         ])
     }
     optional_keys(){
@@ -132,9 +130,8 @@ class TrackStatus extends Table{
     required_keys(){
         return new Set([
             "SessionId",
-            "Status",
-            "Message"
-            // _kf???
+            "TrackStatus",
+            "MSG"
         ]);
     }
 }
@@ -199,16 +196,33 @@ class DriverData extends Table{
 }
 
 
-class TimingStatus extends Table{
+class TimingStatsST extends Table{
     name(){
-        return "TimingStatus";
+        return "TimingStats";
     }
     required_keys(){
         return new Set([
             "SessionId",
             "DriverNumber",
             "Position",
-            "Value"
+            "StatValue"
+        ]);
+    }
+}
+
+class TimingStats extends Table{
+    name(){
+        return "TimingStatsST";
+    }
+    required_keys(){
+        return new Set([
+            "SessionId",
+            "DriverNumber",
+            "PersonalBestLapNumber",
+            "PersonalBestPosition",
+            "PersonalBestLapValue",
+            "BestSpeedsFLPosition",
+            "BestSpeedsFLValue"
         ]);
     }
 }
