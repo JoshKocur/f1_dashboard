@@ -4,54 +4,70 @@ function parseData(json) {
     // probably need a check to see if json is infact a json object or not
     // const jsonData = JSON.parse(json);
     const jsonData = json;
-    var parsedData;
     var dataToParse = [];
-    if(jsonData.hasOwnProperty("M")) {
-        var messages = jsonData["M"];
-        if(messages instanceof Array) {
-	    var numMessages = messages.length;
-	    for (var i = 0; i < numMessages; i++) {
-		const message = messages[i];
-		if(message.hasOwnProperty("H")){
-		    const hub = message["H"]; // maybe error checking on this access too?
-		    if(hub.toLowerCase() === "streaming") {
-			dataToParse.push(message["A"]); // maybe error checking on this access too?
-			// if this fails maybe it just isnt added to array, but the array could
-			// contain other valid messages that we want to parse and return
-			// and not just fail (haven't seen this yet, will change code when we encounter
-			// this case)
-		    }
-		} else {
-		    console.log("PARSER ERROR: message did not have 'H' key");
-		    return;
-		}
-            }
-	} else {
-            console.log("PARSER ERROR: did not receive array of messages.");
-            return;
-        }   
-    } else {
-        // some sort of error handling/logging needs to go here (and maybe an error count)
-        console.log("PARSER ERROR: raw message did not have 'M' key");
+	if(!jsonData.hasOwnProperty("M") && !jsonData.hasOwnProperty("R")) {
+		// TODO some sort of error counting?
+		console.log("PARSER ERROR: raw message did not have 'M' or 'R' key");
         return;
-    }
+	}
+	var messages;
+	var messageTypeM = true;
+    if(jsonData.hasOwnProperty("M")) {
+    	messages = jsonData["M"];
+	} else {
+		messages = jsonData["R"];
+		messageTypeM = false;
+	}
+    
+	if(messageTypeM) {
+		if(!(messages instanceof Array)) {
+			console.log("PARSER ERROR: message (type 'M') is not an array of messages.");
+			return;
+		}
+		var numMessages = messages.length;
+		for (var i = 0; i < numMessages; i++) {
+			const message = messages[i];
+			if(!message.hasOwnProperty("H")){
+				console.log("PARSER ERROR: message (type 'M') did not have 'H' key");
+				return;
+			}
+			const hub = message["H"]; // maybe error checking on this access too?
+			if(hub.toLowerCase() === "streaming") {
+				dataToParse.push(message["A"]); // maybe error checking on this access too?
+				// if this fails maybe it just isnt added to array, but the array could
+				// contain other valid messages that we want to parse and return
+				// and not just fail (haven't seen this yet, will change code when we encounter
+				// this case and figure that it is a problem worth handling)
+			}
+		} 
+	} else { // message is type 'R'
+		if(!(messages instanceof Object)) {
+			console.log("PARSER ERROR: message (type 'R') is not an object.");
+			return;
+		}
+		const messageKeys = Object.keys(messages);
+		for (var i = 0; i < messageKeys.length; i++) {
+			const message = messages[messageKeys[i]];
+			dataToParse.push([messageKeys[i], message]);
+		}
+	}
 
     var allParsedData = [];
     var currentData;
     var numDataToParse = dataToParse.length;
     var category;
     var dataObject;
-    var dataDateString;
+    // var dataDateString;
     var buff;
     var decodedString;
     for (var i = 0; i < numDataToParse; i++) {
 		currentData = dataToParse[i];
 		if(currentData instanceof Array) {
 			// a try catch might be better error handling here, we need to check that
-			// 3 entries in the array actually exist
+			// the entries we want from the array actually exist
 			category = currentData[0];
 			dataObject = currentData[1];
-			dataDateString = currentData[2];
+			// dataDateString = currentData[2]; <- message 'R' does not get this and i don't think we really need it?
 			// turn dataDateString into a date/timestamp object?
 		} else {
 			console.log("PARSER ERROR: Data not in array format.");
@@ -201,7 +217,7 @@ function parseData(json) {
 				lineNumber = dataObject[driverNumbers[i]]["Line"];
 				cleanedObject.DriverNumber = driverNumbers[i];
 				cleanedObject.LineNumber = lineNumber;
-				cleanedObject.DateString = dataDateString;
+				// cleanedObject.DateString = dataDateString;
 				allParsedData.push(cleanedObject);
 			}
 
@@ -214,14 +230,14 @@ function parseData(json) {
 				lineNumber = dataObject["Lines"][driverNumbers[i]]["Line"];
 				cleanedObject.DriverNumber = driverNumbers[i];
 				cleanedObject.LineNumber = lineNumber;
-				cleanedObject.DateString = dataDateString;
+				// cleanedObject.DateString = dataDateString;
 				allParsedData.push(cleanedObject);
 			}
 
 			break;
 		case "Heartbeat":
 			// not bothering with HeartBeat currently
-			console.log("Currently ignoring Heartbeat" + (category));
+			console.log("Currently ignoring " + (category));
 
 			break;
 		case "TopThree":
@@ -240,16 +256,16 @@ function parseData(json) {
 			// }
 			// allParsedData.push(cleanedObject);
 
-			console.log("Currently ignoring TopThree" + (category));
+			console.log("Currently ignoring " + (category));
 
 			break;
 		case "WeatherData":
-			dataObject.DateString = dataDateString;
+			// dataObject.DateString = dataDateString;
 			allParsedData.push(dataObject);
 
 			break;
 		case "TrackStatus":
-			dataObject.DateString = dataDateString;
+			// dataObject.DateString = dataDateString;
 			allParsedData.push(dataObject);
 
 			break;
@@ -260,7 +276,7 @@ function parseData(json) {
 			var statusSeriesKey = Object.keys(dataObject["StatusSeries"])[0];
 			cleanedObject.UTC = dataObject["StatusSeries"][statusSeriesKey]["Utc"];
 			cleanedObject.TrackStatus = dataObject["StatusSeries"][statusSeriesKey]["TrackStatus"];
-			cleanedObject.DateString = dataDateString;
+			// cleanedObject.DateString = dataDateString;
 
 			allParsedData.push(cleanedObject);
 
@@ -305,13 +321,13 @@ function parseData(json) {
 			// parsedData.category = category;
 			// parsedData.object.push(dataObject);
 			// parsedData.time = dataDateString;
-			console.log("Currently ignoring ExtrapolatedClock" + (category));
+			console.log("Currently ignoring " + (category));
 
 			break;
 		case "LapCount":
 			var cleanedObject = new Object();
 			cleanedObject.CurrentLap = dataObject.CurrentLap;
-			cleanedObject.DateString = dataDateString;
+			// cleanedObject.DateString = dataDateString;
 			allParsedData.push(cleanedObject);
 
 			break;
