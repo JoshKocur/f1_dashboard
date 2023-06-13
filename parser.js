@@ -100,7 +100,7 @@ function parseData(json) {
 					cleanedObject.DRS = currDriverObject["5"];
 					cleanedObject.Breaks = currDriverObject["45"];
 					cleanedObject.UTC = currUtcTime;
-					allParsedData.push(cleanedObject);
+					allParsedData.push({"CarData": cleanedObject});
 				}
 			}
 			
