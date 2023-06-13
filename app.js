@@ -1,9 +1,10 @@
-const parser = require('./parser.js');
-
-// npm i axios
 const axios = require('axios');
 const ws = require('ws');
 const fs = require('fs');
+
+const parser = require('./parser.js');
+const interface = require('./db/interface');
+
 
 async function negotiate() {
 	const hub = encodeURIComponent(JSON.stringify([{name:"Streaming"}]));
