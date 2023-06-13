@@ -84,16 +84,4 @@ async function main() {
 	}
 }
 
-
-class Context{
-    constructor(session){
-        if(arguments.length == 0){
-            let curDate = "".concat(dbConnection.getCurrentDateFormatted());
-            curSession = dbConnection.Session().getBasedOnTerm(curDate)
-        }
-
-    }
-}
-
-
 main();
