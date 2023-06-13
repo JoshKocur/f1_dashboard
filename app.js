@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const parser = require('./parser.js');
 const interface = require('./db/interface');
-
+const queries = require('./db/queries');
 
 async function negotiate() {
 	const hub = encodeURIComponent(JSON.stringify([{name:"Streaming"}]));
@@ -35,10 +35,26 @@ async function connectwss(token, cookie) {
 	    console.log('received %s', data);
 	    // currently just attempts to parse data and logs if it was successful or not
         // not actually saving the data here yet...
-	    var parsedData = parser.parseData(data);
+	    let parsedData = parser.parseData(data);
         if(parsedData) {
-            console.log('successfully parsed data:');
-            console.log(parsedData);
+            let messageType = Object.keys(data)[0];
+            let messages = Object.values(data);
+            // what type of message is it?
+            for(const [tableName, dbTable] of Object.entries(interface)){
+                if(messageType === tableName){
+                    messages.forEach(function(message){
+                        try {
+                            // Dummy sessionid for now...
+                            message.SessionId = 1;
+                            let record = new dbTable(message);
+                            let query = queries[tableName]();
+                            query.insert(record);
+                        } catch (error) {
+                            console.log(`Got error with record: ${message} for table ${dbTable.name}`)
+                        } 
+                    })
+                }
+            }
         }
         const stream = fs.createWriteStream('./data.txt', {'flags': 'a'});
         stream.write(data + '\n');
