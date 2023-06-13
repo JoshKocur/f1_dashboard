@@ -1,5 +1,4 @@
 const parser = require('./parser.js');
-const dbConnection = require('./db/queries.js');
 
 // npm i axios
 const axios = require('axios');
