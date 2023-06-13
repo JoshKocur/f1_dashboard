@@ -177,7 +177,7 @@ function parseData(json) {
 					break;
 				}
 			}
-			allParsedData.push(cleanedObject);
+			allParsedData.push({cleanedObject: "TimingData"});
 
 			break;
 		case "TimingStats":
@@ -203,7 +203,7 @@ function parseData(json) {
 						}
 					}
 				}
-				allParsedData.push(cleanedObject);
+				allParsedData.push({cleanedObject :"TimingStats"});
 			}
 
 			break;
@@ -218,7 +218,7 @@ function parseData(json) {
 				cleanedObject.DriverNumber = driverNumbers[i];
 				cleanedObject.LineNumber = lineNumber;
 				// cleanedObject.DateString = dataDateString;
-				allParsedData.push(cleanedObject);
+				allParsedData.push({cleanedObject: "DriverList"});
 			}
 
 			break;
@@ -231,7 +231,7 @@ function parseData(json) {
 				cleanedObject.DriverNumber = driverNumbers[i];
 				cleanedObject.LineNumber = lineNumber;
 				// cleanedObject.DateString = dataDateString;
-				allParsedData.push(cleanedObject);
+				allParsedData.push({cleanedObject: "TimingAppData"});
 			}
 
 			break;
@@ -261,12 +261,12 @@ function parseData(json) {
 			break;
 		case "WeatherData":
 			// dataObject.DateString = dataDateString;
-			allParsedData.push(dataObject);
+			allParsedData.push({dataObject: "WeatherData"});
 
 			break;
 		case "TrackStatus":
 			// dataObject.DateString = dataDateString;
-			allParsedData.push(dataObject);
+			allParsedData.push({dataObject: "TrackStatus"});
 
 			break;
 		case "SessionData":
@@ -278,7 +278,7 @@ function parseData(json) {
 			cleanedObject.TrackStatus = dataObject["StatusSeries"][statusSeriesKey]["TrackStatus"];
 			// cleanedObject.DateString = dataDateString;
 
-			allParsedData.push(cleanedObject);
+			allParsedData.push({cleanedObject: "SessionData"});
 
 			break;
 		case "RaceControlMessages":
@@ -294,7 +294,7 @@ function parseData(json) {
 			cleanedObject.Sector = nestedObject.Sector;
 			cleanedObject.MSG = nestedObject.Message;
 
-			allParsedData.push(cleanedObject);
+			allParsedData.push({cleanedObject: "RaceControlMessages"});
 
 			break;
 		case "SessionInfo":
@@ -314,7 +314,7 @@ function parseData(json) {
 			cleanedObject.SessionEndDateUTC = dataObject.EndDate;
 			cleanedObject.SessionGmtOffset = dataObject.GmtOffset;
 
-			allParsedData.push(cleanedObject);
+			allParsedData.push({cleanedObject: "Session"});
 
 			break;
 		case "ExtrapolatedClock":
@@ -328,7 +328,7 @@ function parseData(json) {
 			var cleanedObject = new Object();
 			cleanedObject.CurrentLap = dataObject.CurrentLap;
 			// cleanedObject.DateString = dataDateString;
-			allParsedData.push(cleanedObject);
+			allParsedData.push({cleanedObject: "LapCount"});
 
 			break;
 		default:
