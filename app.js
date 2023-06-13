@@ -1,4 +1,5 @@
 const parser = require('./parser.js');
+const dbConnection = require('./db/queries.js');
 
 // npm i axios
 const axios = require('axios');
@@ -50,22 +51,21 @@ async function connectwss(token, cookie) {
 async function main() {
 	try {
         const streams = [
-            "Heartbeat",
-            "CarData.z", 
+            "CarData.z",
             "Position.z",
             "ExtrapolatedClock", 
             "TopThree", 
             "RcmSeries",
             "TimingStats", 
-            "TimingAppData",
-            "WeatherData", 
-            "TrackStatus", 
-            "DriverList",
+            "TimingAppData", 
+            "WeatherData",
+            "TrackStatus",
+            "DriverList", 
             "RaceControlMessages", 
             "SessionInfo",
             "SessionData", 
             "LapCount", 
-            "TimingData"
+            "TimingData" 
         ];
 		const resp = await negotiate();
 		console.log(resp.data);
@@ -83,5 +83,17 @@ async function main() {
 		console.error(e);
 	}
 }
+
+
+class Context{
+    constructor(session){
+        if(arguments.length == 0){
+            let curDate = "".concat(dbConnection.getCurrentDateFormatted());
+            curSession = dbConnection.Session().getBasedOnTerm(curDate)
+        }
+
+    }
+}
+
 
 main();
