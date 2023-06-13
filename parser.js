@@ -129,7 +129,7 @@ function parseData(json) {
 					cleanedObject.Y = currDriverObject["Y"];
 					cleanedObject.Z = currDriverObject["Z"];
 					cleanedObject.UTC = currUtcTime;
-					allParsedData.push(cleanedObject);
+					allParsedData.push({"Position": cleanedObject});
 				}
 			}
 			
