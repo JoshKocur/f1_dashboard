@@ -11,7 +11,7 @@ CREATE TABLE Session(
        SessionName VARCHAR(100),
        SessionStartDateUTC VARCHAR(100),
        SessionEndDateUTC VARCHAR(20),
-       SessionStartDateTimeStamp TIMESTAMP,
+       SessionStartDateTimeStamp DATE,
        SessionGmtOffset VARCHAR(100),
        PRIMARY KEY (SessionId)
 );
@@ -32,11 +32,11 @@ CREATE TABLE WeatherData(
 
 CREATE TABLE TrackStatus(
        SessionId INT NOT NULL,
-       TrackStatus INT NOT NULL AUTO_INCREMENT,
-       Status VARCHAR(2),
-       Message VARCHAR(20),
+       TrackStatusId INT NOT NULL AUTO_INCREMENT,
+       TrackStatus VARCHAR(2),
+       MSG VARCHAR(20),
        FOREIGN KEY (SessionId) REFERENCES Session(SessionId),
-       PRIMARY KEY (TrackStatus)
+       PRIMARY KEY (TrackStatusId)
 );
 
 
@@ -47,8 +47,9 @@ CREATE TABLE RaceControlMessages(
        UTC VARCHAR(20),
        Category VARCHAR(20),
        Flag VARCHAR(25),
+       Scope VARCHAR(10)
        Sector INT,
-       Message VARCHAR(50),
+       MSG VARCHAR(50),
        FOREIGN KEY (SessionId) REFERENCES Session(SessionId),
        PRIMARY KEY (RaceControlMessagesId)
 );
@@ -83,7 +84,7 @@ CREATE TABLE DriverData(
 
 CREATE TABLE DriverList(
        SessionId INT NOT NULL,
-       DriverListId INT NOT NULL,
+       DriverListId INT NOT NULL AUTO_INCREMENT,
        DriverNumber VARCHAR(3) NOT NULL,
        LineNumber INT, 
        FOREIGN KEY (SessionId) REFERENCES Session(SessionId),
@@ -105,7 +106,7 @@ CREATE TABLE TimingData(
        DriverNumber VARCHAR(3) NOT NULL,
        Sector VARCHAR(3),
        Segment VARCHAR(3),
-       Status VARCHAR(5),
+       TimingStatus VARCHAR(5),
        FOREIGN KEY (SessionId) REFERENCES Session(SessionId),
        PRIMARY KEY (TimingDataId)
 );
