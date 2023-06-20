@@ -97,7 +97,7 @@ class WeatherData extends Table{
             "AirTemp",
             "Humidity",
             "Pressure",
-            "RainFall",
+            "Rainfall",
             "TrackTemp",
             "WindSpeed",
             "WindDirection"
@@ -162,36 +162,6 @@ class TimingData extends Table{
             "Segment",
             "TimingStatus",
         ])
-    }
-}
-
-class DriverList extends Table{
-    name(){
-        return "DriverList";
-    }
-    required_keys(){
-        return new Set([
-            "SessionId",
-            "DriverNumber",
-            "LineNumber",
-        ]);
-    }
-}
-
-class DriverData extends Table{
-    name(){
-        return "DriverData";
-    }
-    required_keys(){
-        return new Set([
-            "SessionId",
-            "DriverNumber",
-            "StatusType",
-            "X",
-            'Y',
-            "Z",
-            "UTC"
-        ]);
     }
 }
 
