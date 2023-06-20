@@ -261,7 +261,7 @@ function parseData(json) {
 			break;
 		case "WeatherData":
 			// dataObject.DateString = dataDateString;
-			allParsedData.push({dataObject: "WeatherData"});
+			allParsedData.push({"WeatherData": dataObject});
 
 			break;
 		case "TrackStatus":
