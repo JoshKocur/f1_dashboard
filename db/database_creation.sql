@@ -64,7 +64,7 @@ CREATE TABLE CarData(
        Throttle INT,
        DRS INT,
        Breaks INT,
-       UTC VARCHAR(20),
+       UTC VARCHAR(30),
        FOREIGN KEY (SessionId) REFERENCES Session(SessionId),
        PRIMARY KEY (CarDataId)
 );
