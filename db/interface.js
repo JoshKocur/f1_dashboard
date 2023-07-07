@@ -43,7 +43,7 @@ class Table {
      * present in the object passed into the constructor.
     */
     optional_keys(){
-        return Set([])
+        return new Set([])
     }
 
 }
@@ -207,7 +207,7 @@ class CarData extends Table{
             "DriverNumber",
             "RPM",
             "Speed",
-            "Great",
+            "Gear",
             "Throttle",
             "DRS",
             "Breaks",
