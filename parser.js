@@ -129,7 +129,7 @@ function parseData(json) {
 					cleanedObject.Y = currDriverObject["Y"];
 					cleanedObject.Z = currDriverObject["Z"];
 					cleanedObject.UTC = currUtcTime;
-					allParsedData.push({"Position": cleanedObject});
+					allParsedData.push({"DriverData": cleanedObject});
 				}
 			}
 			
@@ -197,6 +197,7 @@ function parseData(json) {
 							cleanedObject[bestSpeedKeys[k]] = nestedObject["BestSpeeds"][bestSpeed][bestSpeedKeys[k]];
 						}
 					} else {
+						console.log(nestedObject);
 						const lapKeys = Object.keys(nestedObject["PersonalBestLapTime"]);
 						for (let k = 0; k < lapKeys.length; k++) {
 							cleanedObject[lapKeys[k]] = nestedObject["PersonalBestLapTime"][lapKeys[k]];
@@ -272,6 +273,8 @@ function parseData(json) {
 		case "SessionData":
 			// only aware of a "StatusSeries" key so just hard coding this here until we encounter it failing
 			// then we can think of how to better generalize
+			
+			break;
 			var cleanedObject = new Object();
 			var statusSeriesKey = Object.keys(dataObject["StatusSeries"])[0];
 			cleanedObject.UTC = dataObject["StatusSeries"][statusSeriesKey]["Utc"];
