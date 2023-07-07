@@ -1,56 +1,12 @@
 const connection = require('./connection');
 
-function _Query(QString){
-  const h = new Promise((resolve) =>{
-      connection.query(QString, (err, res) =>{
-          resolve(res);
-      })
-  })
-  console.log(h);
-  return h;
-}
-
-async function f(){
-    let prom = _Query("SELECT * FROM Session WHERE SessionId=1");
-    prom.then(result =>{
-        console.log(result['0'].MeetingKey);
-    })
-}
-//f();
-
-
 function Query(QString){
     connection.query(QString, (err, res) =>{
         if(err){
             console.log(err);
         }
-        else{
-            result = res;
-        }
     })
-    return result;
 }
-
-
-function getSessionForDay(date){
-    if (arguments.length == 0){
-        let timeStamp  = getCurrentDateFormatted(date);
-    }
-    return __getSessionForDay(timeStamp);
-    
-}
-
-function getCurrentDateFormatted(date){
-    if(arguments.length == 0){
-        date = new Date();
-    }
-    let day = date.getDate().toString();
-    // ensures that the 4th month is 04, not 4
-    let month = date.getMonth().toString().padStart(2, 0);
-    let year = date.getUTCFullYear().toString();
-    return "".concat(year, "-", month, "-", day);
-}
-
 
 class TableQuery{
     tableName(){
@@ -75,22 +31,6 @@ class TableQuery{
     }
 }
 
-obj2 = {
-    "MeetingKey": 1,
-    "MeetingName": 'test',
-    "MeetingLocation": 'testloc',
-    "MeetingCountry": 'testcirc',
-    "MeetingCircuit": 'testCountry',
-    "ArchiveStatus": 'testarchivestat',
-    "SessionKey": 1,
-    "SessionType": 'testtype',
-    "SessionName": 'testNamefoo',
-    "SessionStartDateUTC": 'foo',
-    "SessionEndDateUTC": 'foo',
-    "SessionStartDateTimeStamp": "1994-03-05",
-    "SessionGmtOffset": '1'
-  }
-
 
 class SessionQuery extends TableQuery{
     tableName(){
@@ -101,8 +41,6 @@ class SessionQuery extends TableQuery{
     }
 }
 
-s = new SessionQuery();
-s.insert(obj2);
 
 
 class WeatherDataQuery extends TableQuery{
@@ -111,7 +49,7 @@ class WeatherDataQuery extends TableQuery{
     }
     insertion_params(record){
         return `INSERT INTO WeatherData (SessionId, AirTemp, Humidity, Pressure, RainFall, TrackTemp, WindSpeed, WindDirection) VALUES 
-            (${record.SessionId}, ${record.AirTemp}, ${record.Humidity}, ${record.Pressure}, ${record.RainFall}, ${record.TrackTemp}, ${record.WindSpeed}, ${record.WindSpeed})`;
+            (${record.SessionId}, ${record.AirTemp}, ${record.Humidity}, ${record.Pressure}, ${record.Rainfall}, ${record.TrackTemp}, ${record.WindSpeed}, ${record.WindSpeed})`;
     }
 }
 
@@ -137,8 +75,7 @@ class RaceControlMessagesQuery extends TableQuery{
 
 class CarDataQuery extends TableQuery{
     insertion_params(record){
-        return `INSERT INTO CarData (SessionId, DriverNumber, RPM, Speed, Gear, Throttle, DRS, Breaks, UTC) VALUES
-            (${record.SessionId},
+        return `INSERT INTO CarData (SessionId, DriverNumber, RPM, Speed, Gear, Throttle, DRS, Breaks, UTC) VALUES(${record.SessionId},
              ${record.DriverNumber},
              ${record.RPM},
              ${record.Speed},
@@ -146,20 +83,13 @@ class CarDataQuery extends TableQuery{
              ${record.Throttle},
              ${record.DRS},
              ${record.Breaks},
-            ${record.UTC})`;
+            "${record.UTC}")`;
     }
 }
 
 class DriverDataQuery extends TableQuery{
     insertion_params(record){
-        return `INSERT INTO DriverData (SessionId, DriverNumber, StatusType, X, Y, Z, UTC) VALUES
-          (${record.SessionId},
-           ${record.DriverNumber},
-           ${record.StatusType},
-           ${record.X},
-           ${record.Y},
-           ${record.Z},
-           ${record.UTC})`;
+        return `INSERT INTO DriverData (SessionId, DriverNumber, StatusType, X, Y, Z, UTC) VALUES(${record.SessionId}, ${record.DriverNumber},"${record.StatusType}", ${record.X},${record.Y},${record.Z},"${record.UTC}")`;
     }
 }
 
@@ -205,6 +135,7 @@ class TimingStatsSTQuery extends TableQuery{
 module.exports = {
     "Session": SessionQuery,
     "Query": Query,
-    "Q": _Query,
-    "getCurrentDateFormatted": getCurrentDateFormatted
+    "WeatherData": WeatherDataQuery,
+    "CarData": CarDataQuery,
+    "DriverData": DriverDataQuery
 }
