@@ -2,7 +2,7 @@ const axios = require('axios');
 const ws = require('ws');
 const fs = require('fs');
 
-// const parser = require('./parser.js');
+const parser = require('./parser.js');
  const interface = require('./db/interface');
  const queries = require('./db/queries');
 
