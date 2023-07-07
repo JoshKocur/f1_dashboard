@@ -2,9 +2,9 @@ const axios = require('axios');
 const ws = require('ws');
 const fs = require('fs');
 
-const parser = require('./parser.js');
-const interface = require('./db/interface');
-const queries = require('./db/queries');
+// const parser = require('./parser.js');
+ const interface = require('./db/interface');
+ const queries = require('./db/queries');
 
 async function negotiate() {
 	const hub = encodeURIComponent(JSON.stringify([{name:"Streaming"}]));
@@ -33,8 +33,6 @@ async function connectwss(token, cookie) {
 	});
 	sock.on('message', (data) => {
 	    console.log('received %s', data);
-	    // currently just attempts to parse data and logs if it was successful or not
-        // not actually saving the data here yet...
 	    let parsedData = parser.parseData(data);
         if(parsedData) {
             let messageType = Object.keys(data)[0];
@@ -56,7 +54,7 @@ async function connectwss(token, cookie) {
                 }
             }
         }
-        const stream = fs.createWriteStream('./data.txt', {'flags': 'a'});
+        const stream = fs.createWriteStream('./data_race.txt', {'flags': 'a'});
         stream.write(data + '\n');
 	});
 	});
