@@ -177,7 +177,7 @@ function parseData(json) {
 					break;
 				}
 			}
-			allParsedData.push({cleanedObject: "TimingData"});
+			allParsedData.push({"TimingData": cleanedObject});
 
 			break;
 		case "TimingStats":
@@ -196,6 +196,15 @@ function parseData(json) {
 						for (let k = 0; k < bestSpeedKeys.length; k++) {
 							cleanedObject[bestSpeedKeys[k]] = nestedObject["BestSpeeds"][bestSpeed][bestSpeedKeys[k]];
 						}
+					} else if (keys[j] == "BestSectors") {
+						var driverNumbers = Object.keys(nestedObject["BestSectors"]);
+						for (let k = 0; k < driverNumbers.length; k++) {
+							var driverObject = nestedObject["BestSectors"][driverNumbers[k]];
+							var driverKeys = Object.keys(driverObject);
+							for (let dKeyIdx = 0; dKeyIdx < driverKeys.length; dKeyIdx++) {
+								cleanedObject[driverKeys[dKeyIdx]] = driverObject[driverKeys[dKeyIdx]];
+							}
+						}
 					} else {
 						console.log(nestedObject);
 						const lapKeys = Object.keys(nestedObject["PersonalBestLapTime"]);
@@ -204,7 +213,7 @@ function parseData(json) {
 						}
 					}
 				}
-				allParsedData.push({cleanedObject :"TimingStats"});
+				allParsedData.push({"TimingStats": cleanedObject});
 			}
 
 			break;
@@ -219,7 +228,7 @@ function parseData(json) {
 				cleanedObject.DriverNumber = driverNumbers[i];
 				cleanedObject.LineNumber = lineNumber;
 				// cleanedObject.DateString = dataDateString;
-				allParsedData.push({cleanedObject: "DriverList"});
+				allParsedData.push({"DriverList": cleanedObject});
 			}
 
 			break;
@@ -232,7 +241,7 @@ function parseData(json) {
 				cleanedObject.DriverNumber = driverNumbers[i];
 				cleanedObject.LineNumber = lineNumber;
 				// cleanedObject.DateString = dataDateString;
-				allParsedData.push({cleanedObject: "TimingAppData"});
+				allParsedData.push({"TimingAppData": cleanedObject});
 			}
 
 			break;
@@ -267,7 +276,7 @@ function parseData(json) {
 			break;
 		case "TrackStatus":
 			// dataObject.DateString = dataDateString;
-			allParsedData.push({dataObject: "TrackStatus"});
+			allParsedData.push({"TrackStatus": dataObject});
 
 			break;
 		case "SessionData":
@@ -281,7 +290,7 @@ function parseData(json) {
 			cleanedObject.TrackStatus = dataObject["StatusSeries"][statusSeriesKey]["TrackStatus"];
 			// cleanedObject.DateString = dataDateString;
 
-			allParsedData.push({cleanedObject: "SessionData"});
+			allParsedData.push({"SessionData": cleanedObject});
 
 			break;
 		case "RaceControlMessages":
@@ -297,7 +306,7 @@ function parseData(json) {
 			cleanedObject.Sector = nestedObject.Sector;
 			cleanedObject.MSG = nestedObject.Message;
 
-			allParsedData.push({cleanedObject: "RaceControlMessages"});
+			allParsedData.push({"RaceControlMessages": cleanedObject});
 
 			break;
 		case "SessionInfo":
@@ -317,7 +326,7 @@ function parseData(json) {
 			cleanedObject.SessionEndDateUTC = dataObject.EndDate;
 			cleanedObject.SessionGmtOffset = dataObject.GmtOffset;
 
-			allParsedData.push({cleanedObject: "Session"});
+			allParsedData.push({"Session": cleanedObject});
 
 			break;
 		case "ExtrapolatedClock":
@@ -331,7 +340,7 @@ function parseData(json) {
 			var cleanedObject = new Object();
 			cleanedObject.CurrentLap = dataObject.CurrentLap;
 			// cleanedObject.DateString = dataDateString;
-			allParsedData.push({cleanedObject: "LapCount"});
+			allParsedData.push({"LapCount": cleanedObject});
 
 			break;
 		default:
